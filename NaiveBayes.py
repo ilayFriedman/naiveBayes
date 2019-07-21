@@ -2,7 +2,7 @@ import csv
 from collections import Counter
 
 class NaiveBayes:
-    def build(self,folderPath):
+    def build(self,folderPath, bind):
         self.folderPath = folderPath
 
         #READ DATA
@@ -46,15 +46,18 @@ class NaiveBayes:
         # FILL MISSING VALUES
         self.fillEmptyValues()
 
+        #discretization
+        self.discretization(bind)
+
 
     def fillEmptyValues(self):
 
         for line in self.train_Data:
             includeEmptyCell = '' in line
             while(includeEmptyCell):
-                print (line)
+                # print (line)
                 indexEmpty = line.index('')
-                print(indexEmpty)
+                # print(indexEmpty)
                 # if(self.content[self.attIndexes.keys()[self.attIndexes.values().index(indexEmpty)]] == 'NUMERIC'):
                 #     print('NUMBERCC')
                 #     line[indexEmpty] = "#"
@@ -62,7 +65,7 @@ class NaiveBayes:
                 #     print("no!")
                 #     line[indexEmpty] = "#"
                 line[indexEmpty] = self.missValues[indexEmpty]
-                print(line)
+                # print(line)
                 includeEmptyCell = '' in line
 
     def missingValues(self):
@@ -75,7 +78,7 @@ class NaiveBayes:
                 rowList = self.rowByIndex(att[1])
                 self.missValues[att[1]] = Counter(rowList).most_common(1)[0][0]
 
-        print (self.missValues)
+        # print (self.missValues)
 
 
     def rowByIndex(self,index):
@@ -85,7 +88,30 @@ class NaiveBayes:
                 rowInIndex.append(line[index])
         return rowInIndex
 
+    def discretization(self, bind):
+        for att in self.content.items():
+            if ('NUMERIC' in att[1]):
+                print ('###')
+                index = self.attIndexes[att[0]]
+                self.train_Data.sort(key=lambda x: x[index])
+                col = map(float, self.rowByIndex(index))
+                mini = min(col)
+                maxi = max(col)
+                range = (maxi - mini) / bind
+                currVal = round(mini + range, 3)
+                j = 1
+                for i in self.train_Data:
+                    # min =
+                    tmp = i[index]
+                    if (float(i[index]) <= currVal):
+                        i[index] = round(currVal, 3)
+                    else:
+                        currVal += range
+                        while (float(i[index]) > currVal):
+                            currVal += range
+                        i[index] = round(currVal, 3)
+
 
 NB = NaiveBayes()
 
-NB.build("D:/documents/users/ilayfri/Downloads")
+NB.build("C:/Users/shororen/PycharmProjects/naiveBayes", 100)
