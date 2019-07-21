@@ -12,8 +12,10 @@ class NaiveBayes:
         #readContent
         with open(self.folderPath + "/Structure.txt", "r") as structureFile:
             self.content = {}
+            self.attIndexes = {}
             attributes = structureFile.read().replace("\n", "").split("@ATTRIBUTE ")
             #print(attributes)
+            i = 0
             for att in attributes:
                 start = att.find('{')
                 key = att[:start - 1]
@@ -21,21 +23,21 @@ class NaiveBayes:
                 values = values.split(",")
                 if (start != -1):
                     self.content[key] = values
+                    self.attIndexes[i] = key
+                    i += 1
                 else:
                     start = att.find('NUMERIC')
                     if (start != -1):
                         key = att.split(" ")[0]
                         self.content[key] = 'NUMERIC'
+                        self.attIndexes[i] = key
+                        i += 1
             #print(self.content)
+            print(self.attIndexes)
         structureFile.close()
 
     def fillEmptyValues(self):
-        for line in self.train_Data:
-            if('' in line):
-                missingIndex = line.index('')
-
         for at in self.content:
-
 
 
 
