@@ -6,7 +6,7 @@ class NaiveBayes:
         #readDATA
         with open(self.folderPath+'/train.csv', 'r') as file:
             reader = csv.reader(file, delimiter=',')
-            self.linesDataList = list(reader)
+            self.train_Data = list(reader)
         file.close()
 
         #readContent
@@ -30,6 +30,12 @@ class NaiveBayes:
         structureFile.close()
 
     def fillEmptyValues(self):
+        for line in self.train_Data:
+            if('' in line):
+                missingIndex = line.index('')
+
+        for at in self.content:
+
 
 
 
