@@ -6,7 +6,7 @@ class NaiveBayes:
         self.folderPath = folderPath
 
         #readDATA
-        with open(self.folderPath+'/train.csv', 'r') as file:
+        with open(self.folderPath+'/test.csv', 'r') as file:
             reader = csv.reader(file, delimiter=',')
             next(file)
             self.train_Data = list(reader)
@@ -72,8 +72,8 @@ class NaiveBayes:
             rowInIndex.append(line[index])
         return rowInIndex
 
-
-NB = NaiveBayes()
-
-NB.build("D:/documents/users/ilayfri/Downloads")
-NB.missingValues()
+#
+# NB = NaiveBayes()
+#
+# NB.build("D:/documents/users/ilayfri/Downloads")
+# NB.missingValues()
