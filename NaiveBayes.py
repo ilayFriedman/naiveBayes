@@ -5,14 +5,14 @@ class NaiveBayes:
     def build(self,folderPath):
         self.folderPath = folderPath
 
-        #readDATA
+        #READ DATA
         with open(self.folderPath+'/train.csv', 'r') as file:
             reader = csv.reader(file, delimiter=',')
             next(file)
             self.train_Data = list(reader)
         file.close()
 
-        #readContent
+        #READ CONTENT
         with open(self.folderPath + "/Structure.txt", "r") as structureFile:
             self.content = {}
             self.attIndexes = {}
@@ -39,18 +39,30 @@ class NaiveBayes:
             #print(self.attIndexes)
         structureFile.close()
 
+
+        # GET FILLED VALUES
+        self.missingValues()
+
+        # FILL MISSING VALUES
+        self.fillEmptyValues()
+
+
     def fillEmptyValues(self):
+
         for line in self.train_Data:
             includeEmptyCell = '' in line
             while(includeEmptyCell):
+                print (line)
                 indexEmpty = line.index('')
-                #print(indexEmpty)
-                if(self.content[self.attIndexes.keys()[self.attIndexes.values().index(indexEmpty)]] == 'NUMERIC'):
-                    print('NUMBERCC')
-                    line[indexEmpty] = "#"
-                else:
-                    print("no!")
-                    line[indexEmpty] = "#"
+                print(indexEmpty)
+                # if(self.content[self.attIndexes.keys()[self.attIndexes.values().index(indexEmpty)]] == 'NUMERIC'):
+                #     print('NUMBERCC')
+                #     line[indexEmpty] = "#"
+                # else:
+                #     print("no!")
+                #     line[indexEmpty] = "#"
+                line[indexEmpty] = self.missValues[indexEmpty]
+                print(line)
                 includeEmptyCell = '' in line
 
     def missingValues(self):
@@ -58,10 +70,10 @@ class NaiveBayes:
         for att in self.attIndexes.items():
             if (self.content[self.attIndexes.keys()[self.attIndexes.values().index(att[1])]] == 'NUMERIC'):
                 rowList = self.rowByIndex(att[1])
-                print (sum)
-                self.missValues[att[1]] = "NUMERIC"
+                self.missValues[att[1]] = str(round(sum(map(float,rowList)) / len(rowList),3))
             else:
-                self.missValues[att[1]] = "NO"
+                rowList = self.rowByIndex(att[1])
+                self.missValues[att[1]] = Counter(rowList).most_common(1)[0][0]
 
         print (self.missValues)
 
@@ -69,11 +81,11 @@ class NaiveBayes:
     def rowByIndex(self,index):
         rowInIndex=[]
         for line in self.train_Data:
-            rowInIndex.append(line[index])
+            if(line[index] != ''):
+                rowInIndex.append(line[index])
         return rowInIndex
 
 
 NB = NaiveBayes()
 
 NB.build("D:/documents/users/ilayfri/Downloads")
-NB.missingValues()
