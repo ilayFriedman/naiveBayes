@@ -1,4 +1,6 @@
 import csv
+from collections import Counter
+
 class NaiveBayes:
     def build(self,folderPath):
         self.folderPath = folderPath
@@ -6,6 +8,7 @@ class NaiveBayes:
         #readDATA
         with open(self.folderPath+'/train.csv', 'r') as file:
             reader = csv.reader(file, delimiter=',')
+            next(file)
             self.train_Data = list(reader)
         file.close()
 
@@ -33,7 +36,7 @@ class NaiveBayes:
                         self.attIndexes[key] = i
                         i += 1
             #print(self.content)
-            print(self.attIndexes)
+            #print(self.attIndexes)
         structureFile.close()
 
     def fillEmptyValues(self):
@@ -42,16 +45,35 @@ class NaiveBayes:
             while(includeEmptyCell):
                 indexEmpty = line.index('')
                 #print(indexEmpty)
-                #if(indexEmpty)
+                if(self.content[self.attIndexes.keys()[self.attIndexes.values().index(indexEmpty)]] == 'NUMERIC'):
+                    print('NUMBERCC')
+                    line[indexEmpty] = "#"
+                else:
+                    print("no!")
+                    line[indexEmpty] = "#"
                 includeEmptyCell = '' in line
 
+    def missingValues(self):
+        self.missValues ={}
+        for att in self.attIndexes.items():
+            if (self.content[self.attIndexes.keys()[self.attIndexes.values().index(att[1])]] == 'NUMERIC'):
+                rowList = self.rowByIndex(att[1])
+                print (sum)
+                self.missValues[att[1]] = "NUMERIC"
+            else:
+                self.missValues[att[1]] = "NO"
+
+        print (self.missValues)
 
 
-
-
+    def rowByIndex(self,index):
+        rowInIndex=[]
+        for line in self.train_Data:
+            rowInIndex.append(line[index])
+        return rowInIndex
 
 
 NB = NaiveBayes()
 
 NB.build("D:/documents/users/ilayfri/Downloads")
-NB.fillEmptyValues()
+NB.missingValues()
