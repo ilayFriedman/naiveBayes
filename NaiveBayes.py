@@ -23,21 +23,27 @@ class NaiveBayes:
                 values = values.split(",")
                 if (start != -1):
                     self.content[key] = values
-                    self.attIndexes[i] = key
+                    self.attIndexes[key] = i
                     i += 1
                 else:
                     start = att.find('NUMERIC')
                     if (start != -1):
                         key = att.split(" ")[0]
                         self.content[key] = 'NUMERIC'
-                        self.attIndexes[i] = key
+                        self.attIndexes[key] = i
                         i += 1
             #print(self.content)
             print(self.attIndexes)
         structureFile.close()
 
     def fillEmptyValues(self):
-        for at in self.content:
+        for line in self.train_Data:
+            includeEmptyCell = '' in line
+            while(includeEmptyCell):
+                indexEmpty = line.index('')
+                #print(indexEmpty)
+                #if(indexEmpty)
+                includeEmptyCell = '' in line
 
 
 
@@ -48,3 +54,4 @@ class NaiveBayes:
 NB = NaiveBayes()
 
 NB.build("D:/documents/users/ilayfri/Downloads")
+NB.fillEmptyValues()
