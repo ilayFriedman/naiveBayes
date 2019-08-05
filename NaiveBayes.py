@@ -135,51 +135,7 @@ class NaiveBayes:
                         while (float(i[index]) > currValTest):
                             currValTest += rangeTest
                         i[index] = round(currValTest, 3)
-    #
-    # if (type == "train"):
-    #     for att in self.content.items():
-    #         if ('NUMERIC' in att[1]):
-    #             index = self.attIndexes[att[0]]
-    #             self.train_Data.sort(key=lambda x: x[index])
-    #             col = map(float, self.rowByIndex(index, self.train_Data))
-    #             mini = min(col)
-    #             maxi = max(col)
-    #             range = (maxi - mini) / bind
-    #             self.content[att[0]] = []
-    #             currVal = round(mini + range, 3)
-    #             j = 1
-    #             for i in self.train_Data:
-    #                 # min =
-    #                 tmp = i[index]
-    #                 if (float(i[index]) <= currVal):
-    #                     i[index] = round(currVal, 3)
-    #                     self.content[att[0]].append(round(currVal, 3))
-    #                 else:
-    #                     currVal += range
-    #                     while (float(i[index]) > currVal):
-    #                         currVal += range
-    #                     i[index] = round(currVal, 3)
-    #                     self.content[att[0]].append(round(currVal, 3))
-    #             self.content[att[0]] = set(self.content[att[0]])
-    # elif (type == "test"):
-    #     for att in self.numericAtt:
-    #         index = self.numericAtt[att]
-    #         self.test_Data.sort(key=lambda x: x[index])
-    #         col = map(float, self.rowByIndex(index, self.train_Data))
-    #         miniTest = min(col)
-    #         maxiTest = max(col)
-    #         rangeTest = (miniTest - maxiTest) / bind
-    #         currValTest = round(maxiTest + rangeTest, 3)
-    #         for i in self.test_Data:
-    #             # min =
-    #             tmp = i[index]
-    #             if (float(i[index]) <= currValTest):
-    #                 i[index] = round(currValTest, 3)
-    #             else:
-    #                 currValTest += rangeTest
-    #                 while (float(i[index]) > currValTest):
-    #                     currValTest += rangeTest
-    #                 i[index] = round(currValTest, 3)
+
 
     def classify(self):
         # READ TEST
