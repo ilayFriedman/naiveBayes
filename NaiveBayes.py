@@ -69,7 +69,9 @@ class NaiveBayes:
     def missingValues(self):
         self.missValues = {}
         for att in self.attIndexes.items():
-            if (self.content[self.attIndexes.keys()[self.attIndexes.values().index(att[1])]] == 'NUMERIC'):
+            #print (att[1])
+           # print (self.attIndexes.values()).index(att[1])
+            if (self.content[self.attIndexes.keys()[list(self.attIndexes.values().index(att[1]))]] == 'NUMERIC'):
                 rowList = self.rowByIndex(att[1])
                 self.missValues[att[1]] = str(round(sum(map(float, rowList)) / len(rowList), 3))
             else:
@@ -131,7 +133,7 @@ class NaiveBayes:
             mone = self.rowByIndex(len(self.content)-1).count(self.content['class'][0])
             # print float(float(self.rowByIndex(len(self.content)-1).count(self.content['class'][0])) /float(len(self.train_Data)))
             prob0 = prob0 * float(float(self.rowByIndex(len(self.content)-1).count(self.content['class'][0])) /float(len(self.train_Data)))
-            print prob0
+            print (prob0)
             prob1 = prob1 * float(float(self.rowByIndex(len(self.content)-1).count(self.content['class'][1])) /float(len(self.train_Data)))
             # print prob1
             if (prob0 > prob1):
@@ -150,7 +152,7 @@ class NaiveBayes:
         # print (m)
         nc = self.ncValue(attIndex, attValue, classIndex, classValue)
         # print ("nc: "+ str(nc))
-        p = 1 / float((len(self.content[self.attIndexes.keys()[self.attIndexes.values().index(attIndex)]])))
+        p = 1 / float((len(self.content[self.attIndexes.keys()[list(self.attIndexes.values().index(attIndex))]])))
         # print ("p: "+ str(p))
         n = self.rowByIndex(classIndex).count(classValue)
         # print ("n: " + str(n))
@@ -169,5 +171,5 @@ class NaiveBayes:
 
 NB = NaiveBayes()
 
-NB.build("C:/Users/shororen/PycharmProjects/naiveBayes", 100)
+NB.build("C:/Users/User/Desktop/BINA4", 100)
 NB.classify()
