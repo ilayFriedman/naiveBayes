@@ -1,5 +1,7 @@
 import sys
+from NaiveBayes import NaiveBayes
 from tkinter.filedialog import askopenfilename, askdirectory
+from tkinter import messagebox
 
 try:
     import Tkinter as tk
@@ -38,6 +40,7 @@ def destroy_Naive_Bayes_Clasiffier():
     w = None
 
 class Naive_Bayes_Clasiffier:
+
     def __init__(self, top=None):
         '''This class configures and populates the toplevel window.
            top is the toplevel containing window.'''
@@ -101,6 +104,7 @@ class Naive_Bayes_Clasiffier:
         self.Build_button.configure(text='''Build''')
         self.Build_button.configure(width=166)
         self.Build_button.configure(state='disable')
+        self.Build_button.configure(command=self.startBuild)
 
         self.Dicritezation_frame = tk.LabelFrame(top)
         self.Dicritezation_frame.place(relx=0.06, rely=0.5, relheight=0.232
@@ -122,19 +126,29 @@ class Naive_Bayes_Clasiffier:
         self.Classify_button.configure(takefocus="")
         self.Classify_button.configure(text='''Classify''')
         self.Classify_button.configure(width=166)
+        self.Classify_button.configure(command=self.classify)
 
         self.inputBindAlret = ttk.Label(top)
         self.inputBindAlret.place(relx=0.05, rely=0.75, height=19, width=202)
         self.inputBindAlret.configure(background="#3e5d93")
-        self.inputBindAlret.configure(foreground="#ffffffffffff")
+        self.inputBindAlret.configure(foreground="#3e5d93")
         self.inputBindAlret.configure(relief='flat')
         self.inputBindAlret.configure(text='''please enter only positive number''')
         self.inputBindAlret.configure(width=202)
-        self.inputBindAlret.grid(row=0,column=1,sticky='nwes')
+
 
         self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
         top.configure(menu = self.menubar)
 
+    def startBuild(self):
+        self.NB = NaiveBayes()
+        self.NB.build(self.directory_textField.get(),self.bins_textField.get())
+        messagebox.showinfo("Update From Build", "Building classifier using train-set is done!")
+
+    def classify(self):
+        self.NB.classify()
+        messagebox.showinfo("All Done", "It's Done! a file added to your directory with the answers! ")
+        sys.exit()
     def folderBrowse(self):
         dirWind = tk.Tk()
         dirWind.withdraw()
@@ -143,21 +157,32 @@ class Naive_Bayes_Clasiffier:
             self.directory_textField.delete(0,'end')
         self.directory_textField.insert(0,str(path))
         dirWind.destroy()
-        self.checkAbilltyBuildButton()
-
-    def checkAbilltyBuildButton(self):
-        print("here")
-        # if((len(str(self.directory_textField.get()))!= 0) and (len(str(self.bins_textField.get())) != 0)):
-        #     self.Build_button.configure(state='normal')
+        if(self.word.isdigit):
+            # check path!!
+            self.Build_button.configure(state='normal')
 
     def key(self,event):
-        if(repr(event.char) == '1'):
-            self.inputBindAlret.grid(row=0, column=1, sticky='nwes')
+        #(not str(event.char).isdigit()
+        if(event.keycode == 8):
+            #print("reves")
+            self.word = (str(self.bins_textField.get()))[:-1]
+        else:
+            self.word = str(self.bins_textField.get()+str(event.char))
+
+        #print("shit:" + self.word)
+        #print("shit:" + str(len(self.word)))
+        if((self.word.isdigit()) or (len(self.word) == 0)):# and len(str(self.bins_textField.get())) == 0)):
+            self.inputBindAlret.configure(foreground="#3e5d93")
+            if((self.word.isdigit()) and (len(str(self.directory_textField.get())) != 0)):
+                self.Build_button.configure(state='normal')
+            else:
+                self.Build_button.configure(state='disable')
+
+        else:
+            self.inputBindAlret.configure(foreground="#ffffffffffff")
+            self.Build_button.configure(state='disable')
         #print ("pressed", repr(event.char))
 
-    def callback(self,event):
-        self.bins_textField.focus_set()
-        print ("clicked at", event.x, event.y)
 
 if __name__ == '__main__':
     vp_start_gui()

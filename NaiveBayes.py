@@ -7,7 +7,7 @@ class NaiveBayes:
         self.folderPath = folderPath
         self.minMax = {}
         self.numericAtt = {}
-        self.bind = bind
+        self.bind = float(bind)
         # READ DATA
         with open(self.folderPath + '/train.csv', 'r') as file:
             reader = csv.reader(file, delimiter=',')
@@ -97,6 +97,7 @@ class NaiveBayes:
                 if ('NUMERIC' in att[1]):
                     index = self.attIndexes[att[0]]
                     self.train_Data.sort(key=lambda x: x[index])
+                    col = self.rowByIndex(index)
                     col = map(float, self.rowByIndex(index))
                     mini = min(col)
                     maxi = max(col)
@@ -197,9 +198,9 @@ class NaiveBayes:
                 counter += 1
 
         return counter
-
-
-NB = NaiveBayes()
-
-NB.build("C:/ass4", 100)
-NB.classify()
+#
+#
+# NB = NaiveBayes()
+#
+# NB.build("C:/ass4", 100)
+# NB.classify()
