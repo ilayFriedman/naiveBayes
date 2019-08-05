@@ -76,15 +76,15 @@ class NaiveBayes:
         self.missValues = {}
         for att in self.attIndexes.items():
             if (att[0] in self.numericAtt):
-                rowList = self.rowByIndex(att[1])
+                rowList = self.colByIndex(att[1])
                 self.missValues[att[1]] = str(round(sum(map(float, rowList)) / len(rowList), 3))
             else:
-                rowList = self.rowByIndex(att[1])
+                rowList = self.colByIndex(att[1])
                 self.missValues[att[1]] = Counter(rowList).most_common(1)[0][0]
 
         # print (self.missValues)
 
-    def rowByIndex(self, index):
+    def colByIndex(self, index):
         rowInIndex = []
         for line in self.train_Data:
             if (line[index] != ''):
@@ -97,8 +97,8 @@ class NaiveBayes:
                 if ('NUMERIC' in att[1]):
                     index = self.attIndexes[att[0]]
                     self.train_Data.sort(key=lambda x: x[index])
-                    col = self.rowByIndex(index)
-                    col = map(float, self.rowByIndex(index))
+                    col = self.colByIndex(index)
+                    col = map(float, self.colByIndex(index))
                     mini = min(col)
                     maxi = max(col)
                     self.minMax[att[0]] = [mini, maxi]
@@ -161,11 +161,11 @@ class NaiveBayes:
                 # print prob0
                 prob1 *= self.mEstimator(i, att, len(self.content)-1, self.content['class'][1])
                 i += 1
-            mone = self.rowByIndex(len(self.content)-1).count(self.content['class'][0])
+            mone = self.colByIndex(len(self.content) - 1).count(self.content['class'][0])
             # print float(float(self.rowByIndex(len(self.content)-1).count(self.content['class'][0])) /float(len(self.train_Data)))
-            prob0 = prob0 * float(float(self.rowByIndex(len(self.content)-1).count(self.content['class'][0])) /float(len(self.train_Data)))
+            prob0 = prob0 * float(float(self.colByIndex(len(self.content) - 1).count(self.content['class'][0])) / float(len(self.train_Data)))
             # print (prob0)
-            prob1 = prob1 * float(float(self.rowByIndex(len(self.content)-1).count(self.content['class'][1])) /float(len(self.train_Data)))
+            prob1 = prob1 * float(float(self.colByIndex(len(self.content) - 1).count(self.content['class'][1])) / float(len(self.train_Data)))
             # print prob1
             if (prob0 > prob1):
                 finalResults.append(self.content['class'][0])
@@ -185,7 +185,7 @@ class NaiveBayes:
         # print (float((len(self.content[self.attIndexes.keys()[self.attIndexes.values().index(attIndex)]]))))
         p = 1 / float((len(self.content[self.attIndexes.keys()[self.attIndexes.values().index(attIndex)]])))
         # print ("p: "+ str(p))
-        n = self.rowByIndex(classIndex).count(classValue)
+        n = self.colByIndex(classIndex).count(classValue)
         # print ("n: " + str(n))
         # print (float(float(nc + float(m * p)) / float(n + m)))
         return float(float(nc + float(m * p)) / float(n + m))
@@ -198,9 +198,3 @@ class NaiveBayes:
                 counter += 1
 
         return counter
-#
-#
-# NB = NaiveBayes()
-#
-# NB.build("C:/ass4", 100)
-# NB.classify()
