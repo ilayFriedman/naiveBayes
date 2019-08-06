@@ -1,6 +1,6 @@
 import sys
 from NaiveBayes import NaiveBayes
-from tkinter.filedialog import askopenfilename, askdirectory
+from tkinter.filedialog import askopenfilename, askdirectory, os
 from tkinter import messagebox
 
 try:
@@ -83,6 +83,7 @@ class Naive_Bayes_Clasiffier:
         self.directory_frame.configure(background="#3e5d93")
         self.directory_frame.configure(width=440)
 
+
         self.Browse_button = ttk.Button(top)
         self.Browse_button.place(relx=0.71, rely=0.304, height=25, width=96)
         self.Browse_button.configure(takefocus="")
@@ -97,6 +98,7 @@ class Naive_Bayes_Clasiffier:
         self.directory_textField.configure(width=296)
         self.directory_textField.configure(takefocus="")
         self.directory_textField.configure(cursor="ibeam")
+        self.directory_textField.bind("<FocusOut>",self.check)
 
         self.Build_button = ttk.Button(top)
         self.Build_button.place(relx=0.61, rely=0.5, height=55, width=166)
@@ -105,6 +107,8 @@ class Naive_Bayes_Clasiffier:
         self.Build_button.configure(width=166)
         self.Build_button.configure(state='disable')
         self.Build_button.configure(command=self.startBuild)
+
+
 
         self.Dicritezation_frame = tk.LabelFrame(top)
         self.Dicritezation_frame.place(relx=0.06, rely=0.5, relheight=0.232
@@ -119,7 +123,7 @@ class Naive_Bayes_Clasiffier:
         self.bins_textField.place(relx=0.08, rely=0.589, relheight=0.075, relwidth=0.252)
         self.bins_textField.configure(takefocus="")
         self.bins_textField.configure(cursor="ibeam")
-        self.bins_textField.bind("<Key>", self.key)
+        self.bins_textField.bind("<Key>", self.bindListener)
 
         self.Classify_button = ttk.Button(top)
         self.Classify_button.place(relx=0.61, rely=0.714, height=55, width=166)
@@ -127,28 +131,63 @@ class Naive_Bayes_Clasiffier:
         self.Classify_button.configure(text='''Classify''')
         self.Classify_button.configure(width=166)
         self.Classify_button.configure(command=self.classify)
+        self.Classify_button.configure(state='disable')
 
         self.inputBindAlret = ttk.Label(top)
-        self.inputBindAlret.place(relx=0.05, rely=0.75, height=19, width=202)
+        self.inputBindAlret.place(relx=0.05, rely=0.75, height=35, width=202)
         self.inputBindAlret.configure(background="#3e5d93")
         self.inputBindAlret.configure(foreground="#3e5d93")
         self.inputBindAlret.configure(relief='flat')
-        self.inputBindAlret.configure(text='''please enter only positive number''')
+        self.inputBindAlret.configure(text='''The bins number is not valid!\nplease enter only positive number''')
         self.inputBindAlret.configure(width=202)
+
+        self.bindValOk = False
+        self.directoryValOk = False
 
 
         self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
         top.configure(menu = self.menubar)
 
+    def check(self,event):
+        if (os.path.isdir(self.directory_textField.get()) == False ):
+            self.directoryValOk = False
+            if(len(self.directory_textField.get()) !=0):
+                messagebox.showerror('oops!', 'Please insert a valid Directory path!')
+                self.directory_textField.delete(0,'end')
+
+        else:
+            if ((os.path.exists(self.directory_textField.get() + "/train.csv") == False) or (
+                    os.path.exists(self.directory_textField.get() + "/test.csv") == False)
+                    or (os.path.exists(self.directory_textField.get() + "/Structure.txt") == False)):
+                self.directoryValOk = False
+                if (len(self.directory_textField.get()) != 0):
+                    messagebox.showerror('oops!','~~ MISSING FILES ~~\n\nMake sure that the files:\ntrain.csv,\ntest.csv\nStructure.txt \nare exists in this path!')
+            else:
+                self.directoryValOk = True
+                if(self.bindValOk == True):
+                    self.Build_button.configure(state='normal')
+                    self.NB = NaiveBayes()
+
     def startBuild(self):
-        self.NB = NaiveBayes()
-        self.NB.build(self.directory_textField.get(),self.bins_textField.get())
-        messagebox.showinfo("Update From Build", "Building classifier using train-set is done!")
+        try:
+            self.NB.build(self.directory_textField.get(), self.bins_textField.get())
+            if(str(len(self.NB.train_Data)) == 0 or  str(len(self.NB.test_Data))):
+                messagebox.showinfo("OOPS!", "~~ EMPTY FILES ~~\nOne of the Files is Empty!\nThe algorithm cannot run like this!\nCheck it and click again")
+            else:
+                messagebox.showinfo("Update From Build", "Building classifier using train-set is done!")
+                self.Classify_button.configure(state='normal')
+
+
+        except:
+            messagebox.showerror("Crash!", "Something went worng on the algorithm, please click again! ")
+
+
 
     def classify(self):
         self.NB.classify()
         messagebox.showinfo("All Done", "It's Done! a file added to your directory with the answers! ")
         sys.exit()
+
     def folderBrowse(self):
         dirWind = tk.Tk()
         dirWind.withdraw()
@@ -157,31 +196,64 @@ class Naive_Bayes_Clasiffier:
             self.directory_textField.delete(0,'end')
         self.directory_textField.insert(0,str(path))
         dirWind.destroy()
-        if(self.word.isdigit):
-            # check path!!
-            self.Build_button.configure(state='normal')
+        if (os.path.isdir(self.directory_textField.get()) == False ):
+            self.directoryValOk = False
+            if(len(self.directory_textField.get()) !=0):
+                messagebox.showerror('oops!', 'Please insert a valid Directory path!')
+                self.directory_textField.delete(0, 'end')
 
-    def key(self,event):
+        else:
+            if ((os.path.exists(self.directory_textField.get() + "/train.csv") == False) or (
+                    os.path.exists(self.directory_textField.get() + "/test.csv") == False)
+                    or (os.path.exists(self.directory_textField.get() + "/Structure.txt") == False)):
+                self.directoryValOk = False
+                if (len(self.directory_textField.get()) != 0):
+                    messagebox.showerror('oops!','~~ MISSING FILES ~~\n\nMake sure that the files:\ntrain.csv,\ntest.csv\nStructure.txt \nare exists in this path!')
+            else:
+                self.directoryValOk = True
+                if(self.bindValOk == True):
+                    self.Build_button.configure(state='normal')
+                    self.NB = NaiveBayes()
+
+
+
+
+    def bindListener(self,event):
         #(not str(event.char).isdigit()
         if(event.keycode == 8):
             #print("reves")
             self.word = (str(self.bins_textField.get()))[:-1]
         else:
-            self.word = str(self.bins_textField.get()+str(event.char))
+            try:
+                self.word = str(self.bins_textField.get()+str(event.char))
+            except:
+                self.word = str(self.bins_textField.get())
 
         #print("shit:" + self.word)
         #print("shit:" + str(len(self.word)))
         if((self.word.isdigit()) or (len(self.word) == 0)):# and len(str(self.bins_textField.get())) == 0)):
             self.inputBindAlret.configure(foreground="#3e5d93")
-            if((self.word.isdigit()) and (len(str(self.directory_textField.get())) != 0)):
-                self.Build_button.configure(state='normal')
+            if((self.word.isdigit())):
+                self.bindValOk = True
+                if (self.directoryValOk == True):
+                    self.Build_button.configure(state='normal')
+                    self.NB = NaiveBayes()
             else:
+                self.bindValOk = False;
                 self.Build_button.configure(state='disable')
 
         else:
             self.inputBindAlret.configure(foreground="#ffffffffffff")
+            self.bindValOk = False;
+
             self.Build_button.configure(state='disable')
         #print ("pressed", repr(event.char))
+
+
+    def checksEveryInputs(self,event):
+        print ("hi")
+        #self.Classify_button.configure(state='normal')
+
 
 
 if __name__ == '__main__':

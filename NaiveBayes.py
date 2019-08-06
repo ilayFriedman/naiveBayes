@@ -19,11 +19,11 @@ class NaiveBayes:
         with open(self.folderPath + "/Structure.txt", "r") as structureFile:
             self.content = {}
             self.attIndexes = {}
-            attributes = structureFile.read().replace("\n", "").split("@ATTRIBUTE ")
-            # print(attributes)
+            self.attributes = structureFile.read().replace("\n", "").split("@ATTRIBUTE ")
+            # print(self.attributes)
             i = 0
-            attributes.pop(0)
-            for att in attributes:
+            self.attributes.pop(0)
+            for att in self.attributes:
                 start = att.find('{')
                 key = att[:start - 1]
                 values = att[start + 1:-1]
@@ -43,6 +43,13 @@ class NaiveBayes:
             # print(self.content)
             # print(self.attIndexes)
         structureFile.close()
+
+        # READ TEST
+        with open(self.folderPath + '/test.csv', 'r') as file:
+            reader = csv.reader(file, delimiter=',')
+            next(file)
+            self.test_Data = list(reader)
+        file.close()
 
         # GET FILLED VALUES
         self.missingValues()
@@ -139,12 +146,6 @@ class NaiveBayes:
 
 
     def classify(self):
-        # READ TEST
-        with open(self.folderPath + '/test.csv', 'r') as file:
-            reader = csv.reader(file, delimiter=',')
-            next(file)
-            self.test_Data = list(reader)
-        file.close()
         finalResults = []
         self.missingValues()
 
