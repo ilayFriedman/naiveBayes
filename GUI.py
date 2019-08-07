@@ -233,9 +233,9 @@ class Naive_Bayes_Clasiffier:
 
         #print("shit:" + self.word)
         #print("shit:" + str(len(self.word)))
-        if((self.word.isdigit()) or (len(self.word) == 0)):# and len(str(self.bins_textField.get())) == 0)):
+        if((self.word.isdigit() and int(self.word) >0) or (len(self.word) == 0)):# and len(str(self.bins_textField.get())) == 0)):
             self.inputBindAlret.configure(foreground="#3e5d93")
-            if((self.word.isdigit()) and self.word > 0):
+            if((self.word.isdigit())):
                 self.bindValOk = True
                 if (self.directoryValOk == True):
                     self.Build_button.configure(state='normal')

@@ -58,7 +58,9 @@ class NaiveBayes:
         self.fillEmptyValues('train')
 
         # discretization
+        # print("before")
         self.discretization(self.bind, "train")
+        # print("after disc")
 
     def fillEmptyValues(self, type):
         if(type == 'train'):
@@ -189,6 +191,11 @@ class NaiveBayes:
         n = self.colByIndex(classIndex).count(classValue)
         # print ("n: " + str(n))
         # print (float(float(nc + float(m * p)) / float(n + m)))
+        # print("n: "+str(n))
+        # print("nc: "+str(nc))
+        # print("p: "+str(p))
+        # print("--------------")
+
         return float(float(nc + float(m * p)) / float(n + m))
 
 
