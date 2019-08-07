@@ -171,7 +171,9 @@ class Naive_Bayes_Clasiffier:
     def startBuild(self):
         try:
             self.NB.build(self.directory_textField.get(), self.bins_textField.get())
-            if(str(len(self.NB.train_Data)) == 0 or  str(len(self.NB.test_Data))):
+            # print( str(len(self.NB.train_Data)) )
+            # print (str(len(self.NB.test_Data)))
+            if(str(len(self.NB.train_Data)) == 0 or  str(len(self.NB.test_Data)) == 0 or str(len(self.NB.attributes)) == 0):
                 messagebox.showinfo("OOPS!", "~~ EMPTY FILES ~~\nOne of the Files is Empty!\nThe algorithm cannot run like this!\nCheck it and click again")
             else:
                 messagebox.showinfo("Update From Build", "Building classifier using train-set is done!")
@@ -233,7 +235,7 @@ class Naive_Bayes_Clasiffier:
         #print("shit:" + str(len(self.word)))
         if((self.word.isdigit()) or (len(self.word) == 0)):# and len(str(self.bins_textField.get())) == 0)):
             self.inputBindAlret.configure(foreground="#3e5d93")
-            if((self.word.isdigit())):
+            if((self.word.isdigit()) and self.word > 0):
                 self.bindValOk = True
                 if (self.directoryValOk == True):
                     self.Build_button.configure(state='normal')
