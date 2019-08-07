@@ -90,7 +90,7 @@ class Naive_Bayes_Clasiffier:
         self.Browse_button.configure(text='''Browse''')
         self.Browse_button.configure(width=96)
         self.Browse_button.configure(cursor="fleur")
-        self.Browse_button.configure(command=self.folderBrowse)
+        self.Browse_button.configure(command=self.folderBrowseAction)
 
         self.directory_textField = ttk.Entry(top)
         self.directory_textField.place(relx=0.08, rely=0.304, relheight=0.075
@@ -98,7 +98,7 @@ class Naive_Bayes_Clasiffier:
         self.directory_textField.configure(width=296)
         self.directory_textField.configure(takefocus="")
         self.directory_textField.configure(cursor="ibeam")
-        self.directory_textField.bind("<FocusOut>",self.check)
+        self.directory_textField.bind("<FocusOut>", self.valuesCheckButtonAbillity)
 
         self.Build_button = ttk.Button(top)
         self.Build_button.place(relx=0.61, rely=0.5, height=55, width=166)
@@ -123,14 +123,14 @@ class Naive_Bayes_Clasiffier:
         self.bins_textField.place(relx=0.08, rely=0.589, relheight=0.075, relwidth=0.252)
         self.bins_textField.configure(takefocus="")
         self.bins_textField.configure(cursor="ibeam")
-        self.bins_textField.bind("<Key>", self.bindListener)
+        self.bins_textField.bind("<Key>", self.bindListenerVal)
 
         self.Classify_button = ttk.Button(top)
         self.Classify_button.place(relx=0.61, rely=0.714, height=55, width=166)
         self.Classify_button.configure(takefocus="")
         self.Classify_button.configure(text='''Classify''')
         self.Classify_button.configure(width=166)
-        self.Classify_button.configure(command=self.classify)
+        self.Classify_button.configure(command=self.startClassify)
         self.Classify_button.configure(state='disable')
 
         self.inputBindAlret = ttk.Label(top)
@@ -148,7 +148,7 @@ class Naive_Bayes_Clasiffier:
         self.menubar = tk.Menu(top,font="TkMenuFont",bg=_bgcolor,fg=_fgcolor)
         top.configure(menu = self.menubar)
 
-    def check(self,event):
+    def valuesCheckButtonAbillity(self, event):
         if (os.path.isdir(self.directory_textField.get()) == False ):
             self.directoryValOk = False
             if(len(self.directory_textField.get()) !=0):
@@ -171,8 +171,6 @@ class Naive_Bayes_Clasiffier:
     def startBuild(self):
         try:
             self.NB.build(self.directory_textField.get(), self.bins_textField.get())
-            # print( str(len(self.NB.train_Data)) )
-            # print (str(len(self.NB.test_Data)))
             if(str(len(self.NB.train_Data)) == 0 or  str(len(self.NB.test_Data)) == 0 or str(len(self.NB.attributes)) == 0):
                 messagebox.showinfo("OOPS!", "~~ EMPTY FILES ~~\nOne of the Files is Empty!\nThe algorithm cannot run like this!\nCheck it and click again")
             else:
@@ -185,12 +183,12 @@ class Naive_Bayes_Clasiffier:
 
 
 
-    def classify(self):
+    def startClassify(self):
         self.NB.classify()
         messagebox.showinfo("All Done", "It's Done! a file added to your directory with the answers! ")
         sys.exit()
 
-    def folderBrowse(self):
+    def folderBrowseAction(self):
         dirWind = tk.Tk()
         dirWind.withdraw()
         path = askdirectory()
@@ -220,7 +218,7 @@ class Naive_Bayes_Clasiffier:
 
 
 
-    def bindListener(self,event):
+    def bindListenerVal(self, event):
         #(not str(event.char).isdigit()
         if(event.keycode == 8):
             #print("reves")
@@ -251,10 +249,6 @@ class Naive_Bayes_Clasiffier:
             self.Build_button.configure(state='disable')
         #print ("pressed", repr(event.char))
 
-
-    def checksEveryInputs(self,event):
-        print ("hi")
-        #self.Classify_button.configure(state='normal')
 
 
 
